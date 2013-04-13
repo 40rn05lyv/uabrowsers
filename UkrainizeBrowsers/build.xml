@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<project name="ukrainize" default="pack">
+
+    <property name="src" value="${basedir}/src"/>
+    <property name="classes" value="${basedir}/bin"/>
+    <property name="build" value="${basedir}/build"/>
+    <property name="lib" value="${basedir}/lib"/>
+
+	<import file="one-jar-ant-task.xml" optional="false" /> 
+    
+    <path id="myclasspath">
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean">
+        <delete dir="${classes}"/>
+        <delete dir="${build}"/>
+        <mkdir dir="${classes}"/>
+        <mkdir dir="${build}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <javac destdir="${classes}" classpathref="myclasspath" includeantruntime="false" debug="true" debuglevel="lines,vars,source">
+            <src path="${src}"/>
+        </javac>
+    </target>
+
+    <target name="pack" depends="compile">
+        <!-- <jar destfile="${build}/Ukrainize.jar">
+            <fileset dir="${classes}">
+                <include name="**/*.class"/>
+            </fileset>
+        </jar> -->
+        <one-jar destfile="${build}/Ukrainize.jar">
+            <main>
+                <fileset dir="${classes}">
+                	<include name="**/*.class"/>
+            	</fileset>
+            </main>
+			<manifest>
+                <attribute name="One-Jar-Main-Class" value="browsers.windows.StartUkrainize"/>
+            </manifest>
+            <lib>
+               	<fileset dir="${lib}" />
+            </lib>
+        </one-jar> 
+    </target>
+</project>
