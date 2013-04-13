@@ -9,9 +9,8 @@ import org.apache.commons.io.FileUtils;
 
 public class StartUkrainize {
 
-	static String drive = System.getenv("SYSTEMDRIVE");
-	static String users = "Users";
-	static String user = System.getProperty("user.name");
+	static String AppDataRoaming = System.getenv("APPDATA");
+	static String AppDataLocal = System.getenv("LOCALAPPDATA");
 
 	private static String addQParameter(String[] langs) {
 		String[] langsWithQ = new String[langs.length];
@@ -73,7 +72,7 @@ public class StartUkrainize {
 	 */
 	public static void ukrainizeChrome(String[] langs) throws IOException {
 		String setting = join(",", langs); // Without q parameter
-		File folder = createFile(drive, users, user, "AppData", "Local", "Google", "Chrome", "User Data", "Default", "Preferences");
+		File folder = createFile(new File(AppDataLocal), "Google", "Chrome", "User Data", "Default", "Preferences");
 		if (folder.exists()) {
 			String text = FileUtils.readFileToString(folder);
 			text = text.replaceAll("accept_languages.*", "accept_languages\": \"" + setting + "\"");
@@ -94,7 +93,7 @@ public class StartUkrainize {
 	public static void ukrainizeFirefox(String[] langs) throws IOException {
 		final String firefoxSettings = "prefs.js";
 		String setting = join(",", langs); // Without q parameter
-		File profiles = createFile(drive, users, user, "AppData", "Roaming", "Mozilla", "Firefox", "Profiles");
+		File profiles = createFile(new File(AppDataRoaming), "Mozilla", "Firefox", "Profiles");
 
 		if (!profiles.exists() || profiles.isFile()) {
 			return;
@@ -145,8 +144,8 @@ public class StartUkrainize {
 	public static void ukrainizeOpera(String[] langs) throws IOException {
 		String setting = addQParameter(langs); // With q parameter
 
-		File first = createFile(drive, users, user, "AppData", "Roaming", "Opera", "Opera x64", "operaprefs.ini");
-		File second = createFile(drive, users, user, "AppData", "Roaming", "Opera", "Opera", "operaprefs.ini");
+		File first = createFile(new File(AppDataRoaming), "Opera", "Opera x64", "operaprefs.ini");
+		File second = createFile(new File(AppDataRoaming), "Opera", "Opera", "operaprefs.ini");
 
 		if (first.exists()) {
 			String text = FileUtils.readFileToString(first);
